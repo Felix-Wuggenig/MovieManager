@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,33 +16,38 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.felixwuggenig.moviemanager.ui.theme.ErrorColor
+import com.felixwuggenig.moviemanager.viewmodels.LoginViewModel
+import org.koin.androidx.compose.getViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(navController: NavController) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    val viewModel: LoginViewModel = getViewModel()
+    var name = viewModel.nameData.observeAsState("")
+    var email = viewModel.emailData.observeAsState("")
+    var password = viewModel.passwordData.observeAsState("")
+    var confirmPassword = viewModel.passwordConfirmData.observeAsState("")
 
-    var nameError by remember { mutableStateOf("") }
-    var emailError by remember { mutableStateOf("") }
-    var passwordError by remember { mutableStateOf("") }
-    var confirmPasswordError by remember { mutableStateOf("") }
+    var nameError = viewModel.nameError.observeAsState("")
+    var emailError = viewModel.emailError.observeAsState("")
+    var passwordError = viewModel.passwordError.observeAsState("")
+    var confirmPasswordError = viewModel.passwordConfirmError.observeAsState("")
 
-    val passwordFocusRequester = remember { FocusRequester() }
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var passwordConfirmVisibility by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -52,121 +56,94 @@ fun SignUpScreen(navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+            value = name.value,
+            onValueChange = { newName ->
+                viewModel.setNameData(newName)
+            },
             label = { Text("Name") },
             singleLine = true,
-            isError = nameError.isNotEmpty(),
+            isError = nameError.value.isNotEmpty(),
             modifier = Modifier.fillMaxWidth(),
-            keyboardActions = KeyboardActions {
-                if (name.isBlank()) {
-                    nameError = "Name cannot be empty"
-                } else {
-                    nameError = ""
-                }
-            }
         )
-        if (nameError.isNotEmpty()) {
-            Text(text = nameError, color = ErrorColor)
+        if (nameError.value.isNotEmpty()) {
+            Text(text = nameError.value, color = ErrorColor)
         }
 
         OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-                if (email.isBlank()) {
-                    emailError = "Email cannot be empty"
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    emailError = "Invalid email format"
-                } else {
-                    emailError = ""
-                }
+            value = email.value,
+            onValueChange = { newEmail ->
+                viewModel.setEmailData(newEmail)
             },
             label = { Text("Email") },
             singleLine = true,
-            isError = emailError.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth(),
-            keyboardActions = KeyboardActions {
-                if (email.isBlank()) {
-                    emailError = "Email cannot be empty"
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    emailError = "Invalid email format"
-                } else {
-                    emailError = ""
-                }
-            }
+            isError = emailError.value.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth()
         )
-        if (emailError.isNotEmpty()) {
-            Text(text = emailError, color = ErrorColor)
+        if (emailError.value.isNotEmpty()) {
+            Text(text = emailError.value, color = ErrorColor)
         }
 
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            isError = passwordError.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth(),
-            keyboardActions = KeyboardActions {
-                if (password.isBlank()) {
-                    passwordError = "Password cannot be empty"
-                } else if (password.length < 6) {
-                    passwordError = "Password must be at least 6 characters long"
-                } else {
-                    passwordError = ""
-                }
+            value = password.value,
+            onValueChange = { newPassword ->
+                viewModel.setPasswordData(newPassword)
             },
+            label = { Text("Password") },
+            visualTransformation = if (passwordVisibility) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            singleLine = true,
+            isError = passwordError.value.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             trailingIcon = {
-                if (password.isNotEmpty()) {
-                    IconButton(onClick = { password = "" }) {
-                        Icon(Icons.Default.Clear, contentDescription = null)
+                if (password.value.isNotEmpty()) {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        Icon(Icons.Default.Home, contentDescription = null)
                     }
                 }
             }
         )
-        if (passwordError.isNotEmpty()) {
-            Text(text = passwordError, color = ErrorColor)
+        if (passwordError.value.isNotEmpty()) {
+            Text(text = passwordError.value, color = ErrorColor)
         }
 
         OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            isError = confirmPasswordError.isNotEmpty(),
-            modifier = Modifier.fillMaxWidth(),
-            keyboardActions = KeyboardActions {
-                if (confirmPassword != password) {
-                    confirmPasswordError = "Passwords do not match"
-                } else {
-                    confirmPasswordError = ""
-                }
+            value = confirmPassword.value,
+            onValueChange = { newPasswordConfirm ->
+                viewModel.setPasswordConfirmData(newPasswordConfirm)
             },
+            label = { Text("Confirm Password") },
+            visualTransformation = if (passwordConfirmVisibility) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            singleLine = true,
+            isError = confirmPasswordError.value.isNotEmpty(),
+            modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
             trailingIcon = {
-                if (confirmPassword.isNotEmpty()) {
-                    IconButton(onClick = { confirmPassword = "" }) {
-                        Icon(Icons.Default.Clear, contentDescription = null)
+                if (confirmPassword.value.isNotEmpty()) {
+                    IconButton(onClick = {
+                        passwordConfirmVisibility = !passwordConfirmVisibility
+                    }) {
+                        Icon(Icons.Default.Home, contentDescription = null)
                     }
                 }
             }
         )
-        if (confirmPasswordError.isNotEmpty()) {
-            Text(text = confirmPasswordError, color = ErrorColor)
+        if (confirmPasswordError.value.isNotEmpty()) {
+            Text(text = confirmPasswordError.value, color = ErrorColor)
         }
 
         Button(
             onClick = {
-                // Perform sign-up logic here
-                if (name.isBlank()) nameError = "Name cannot be empty"
-                if (email.isBlank()) emailError = "Email cannot be empty"
-                if (password.isBlank()) passwordError = "Password cannot be empty"
-                if (confirmPassword != password) confirmPasswordError = "Passwords do not match"
+                navController.navigate("home")
 
-                if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank() && confirmPassword == password) {
+                if (viewModel.checkData()) {
                     navController.navigate("home")
                 }
             },
