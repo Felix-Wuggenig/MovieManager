@@ -22,11 +22,11 @@ import org.koin.androidx.compose.getViewModel
 fun HomeScreen() {
     val viewModel: HomeViewModel = getViewModel()
     LaunchedEffect(Unit) {
-        viewModel.loadMovieData()
+        viewModel.loadFavMovieData()
         viewModel.loadStaffPickData()
     }
     val onFavoriteClicked: (Int) -> Unit = { id ->
-        //
+        viewModel.updateFavMovies(id)
     }
     val adapter = remember { MovieAdapter(emptyList(), onFavoriteClicked) }
 

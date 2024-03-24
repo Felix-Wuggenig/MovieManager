@@ -3,8 +3,9 @@ package com.felixwuggenig.moviemanager.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.felixwuggenig.moviemanager.data.SharedPreferences
 
-class LoginViewModel() : ViewModel() {
+class LoginViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
 
     private val mutableNameData = MutableLiveData<String>()
     val nameData: LiveData<String> = mutableNameData
@@ -81,6 +82,9 @@ class LoginViewModel() : ViewModel() {
             isValid = false
         } else {
             mutablePasswordConfirmError.value = ""
+        }
+        if (isValid) {
+            sharedPreferences.saveName(mutableNameData.value.orEmpty())
         }
         return isValid
     }
