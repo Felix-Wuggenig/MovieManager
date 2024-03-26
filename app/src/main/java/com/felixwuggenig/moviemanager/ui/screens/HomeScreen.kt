@@ -24,6 +24,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(navController: NavController) {
     val viewModel: HomeViewModel = getViewModel()
+    
     LaunchedEffect(Unit) {
         viewModel.loadFavMovieData()
         viewModel.loadStaffPickData()
@@ -34,7 +35,8 @@ fun HomeScreen(navController: NavController) {
     val onItemClicked: (Int) -> Unit = { id ->
         navController.navigate("details/$id")
     }
-    val favoritesAdapter = remember { FavoriteMovieAdapter(emptyList()) }
+
+    val favoritesAdapter = remember { FavoriteMovieAdapter(emptyList(), onItemClicked) }
     val movieAdapter =
         remember {
             MovieAdapter(
@@ -58,7 +60,7 @@ fun HomeScreen(navController: NavController) {
             factory = { context ->
                 val mainView =
                     LayoutInflater.from(context).inflate(R.layout.home_screen_layout, null)
-                
+
                 val username = mainView.findViewById<TextView>(R.id.username)
                 username.text = viewModel.getName()
 

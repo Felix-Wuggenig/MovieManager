@@ -36,15 +36,23 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun SignUpScreen(navController: NavController) {
     val viewModel: LoginViewModel = getViewModel()
-    var name = viewModel.nameData.observeAsState("")
-    var email = viewModel.emailData.observeAsState("")
-    var password = viewModel.passwordData.observeAsState("")
-    var confirmPassword = viewModel.passwordConfirmData.observeAsState("")
 
-    var nameError = viewModel.nameError.observeAsState("")
-    var emailError = viewModel.emailError.observeAsState("")
-    var passwordError = viewModel.passwordError.observeAsState("")
-    var confirmPasswordError = viewModel.passwordConfirmError.observeAsState("")
+    val onSubmitClicked = {
+        if (viewModel.checkData()) {
+            navController.navigate("home")
+        }
+        navController.popBackStack()
+        navController.navigate("home")
+    }
+    val name = viewModel.nameData.observeAsState("")
+    val email = viewModel.emailData.observeAsState("")
+    val password = viewModel.passwordData.observeAsState("")
+    val confirmPassword = viewModel.passwordConfirmData.observeAsState("")
+
+    val nameError = viewModel.nameError.observeAsState("")
+    val emailError = viewModel.emailError.observeAsState("")
+    val passwordError = viewModel.passwordError.observeAsState("")
+    val confirmPasswordError = viewModel.passwordConfirmError.observeAsState("")
 
     var passwordVisibility by remember { mutableStateOf(false) }
     var passwordConfirmVisibility by remember { mutableStateOf(false) }
@@ -140,13 +148,7 @@ fun SignUpScreen(navController: NavController) {
         }
 
         Button(
-            onClick = {
-                navController.navigate("home")
-
-                if (viewModel.checkData()) {
-                    navController.navigate("home")
-                }
-            },
+            onClick = { onSubmitClicked() },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "Sign Up")

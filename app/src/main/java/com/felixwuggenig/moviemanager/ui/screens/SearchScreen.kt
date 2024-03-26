@@ -31,13 +31,15 @@ fun SearchScreen(navController: NavController) {
     val onFavoriteClicked: (Int) -> Unit = { id ->
         viewModel.updateFavMovies(id)
     }
-    val movieAdapter = remember { MovieAdapter(emptyList(), emptyList(), onFavoriteClicked, {}) }
+    val onItemClicked: (Int) -> Unit = { id ->
+        navController.navigate("details/$id")
+    }
+    val movieAdapter =
+        remember { MovieAdapter(emptyList(), emptyList(), onFavoriteClicked, onItemClicked) }
 
-    // Observe LiveData list and update adapter's data
     val movies by viewModel.movieData.observeAsState(emptyList())
     val favoriteIDs by viewModel.favoritesIdData.observeAsState(emptyList())
     movieAdapter.updateMovies(movies, favoriteIDs)
-
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),

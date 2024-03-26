@@ -11,6 +11,7 @@ import com.felixwuggenig.moviemanager.models.Movie
 
 class FavoriteMovieAdapter(
     private var movies: List<Movie>,
+    private var onMovieClicked: (Int) -> Unit
 ) :
     RecyclerView.Adapter<FavoriteMovieAdapter.ViewHolder>() {
 
@@ -38,8 +39,9 @@ class FavoriteMovieAdapter(
         private val imageViewFavorite: ImageView = itemView.findViewById(R.id.imageViewFavorite)
 
         fun bind(movie: Movie) {
-            // Bind data to views
-            // imageViewMovie.setImageResource(movie.imageResId)
+            itemView.setOnClickListener {
+                onMovieClicked(movie.id)
+            }
             Glide.with(imageViewFavorite).load(movie.posterURL).into(imageViewFavorite)
         }
     }

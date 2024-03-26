@@ -3,7 +3,6 @@ package com.felixwuggenig.moviemanager.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -62,7 +61,6 @@ fun DetailsView(
     onFavoriteClicked: () -> Unit,
     onCloseCLicked: () -> Unit
 ) {
-    val scrollState = rememberScrollState()
     Surface(
         color = MaterialTheme.colorScheme.background
     ) {
@@ -70,7 +68,6 @@ fun DetailsView(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            // Top Right Corner Icons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -85,8 +82,6 @@ fun DetailsView(
                     Icon(Icons.Default.Close, contentDescription = "Close")
                 }
             }
-
-            // Content Section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
