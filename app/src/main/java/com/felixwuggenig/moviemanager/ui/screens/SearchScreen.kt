@@ -1,8 +1,10 @@
 package com.felixwuggenig.moviemanager.ui.screens
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.widget.EditText
 import android.widget.ImageButton
-import androidx.appcompat.widget.SearchView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,7 +31,7 @@ fun SearchScreen(navController: NavController) {
     val onFavoriteClicked: (Int) -> Unit = { id ->
         viewModel.updateFavMovies(id)
     }
-    val movieAdapter = remember { MovieAdapter(emptyList(), onFavoriteClicked, emptyList()) }
+    val movieAdapter = remember { MovieAdapter(emptyList(), emptyList(), onFavoriteClicked, {}) }
 
     // Observe LiveData list and update adapter's data
     val movies by viewModel.movieData.observeAsState(emptyList())
@@ -42,25 +44,39 @@ fun SearchScreen(navController: NavController) {
         factory = { context ->
             val mainView =
                 LayoutInflater.from(context).inflate(R.layout.search_screen_layout, null)
+
             val searchResultList = mainView.findViewById<RecyclerView>(R.id.searchResultsList)
             searchResultList.layoutManager = LinearLayoutManager(context)
             searchResultList.adapter = movieAdapter
-            val searchBar = mainView.findViewById<SearchView>(R.id.searchViewMovie)
-            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextChange(query: String): Boolean {
-                    viewModel.updateSearchString(query)
-                    return false
+
+            val searchBar = mainView.findViewById<EditText>(R.id.searchViewMovie)
+            searchBar.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    // Do nothing
                 }
 
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    //do nothing, searching is done in onQueryTextChange
-                    return false
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Do nothing
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // This method is called after the text has been changed
+                    val searchQuery = s.toString()
+                    // Call your function here with the updated text
+                    viewModel.updateSearchString(searchQuery)
                 }
             })
+
             val backButton = mainView.findViewById<ImageButton>(R.id.backButton)
             backButton.setOnClickListener {
                 navController.navigateUp()
             }
+
             mainView
         }
     )

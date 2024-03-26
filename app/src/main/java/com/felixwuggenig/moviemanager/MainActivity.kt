@@ -8,9 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.felixwuggenig.moviemanager.ui.DetailsScreen
 import com.felixwuggenig.moviemanager.ui.HomeScreen
 import com.felixwuggenig.moviemanager.ui.SearchScreen
@@ -46,8 +48,12 @@ fun MainView() {
         composable("home") {
             HomeScreen(navController = navController)
         }
-        composable("details") {
-            DetailsScreen(navController = navController)
+        composable(
+            "details/{movieId}",
+            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val movieId = navBackStackEntry.arguments?.getInt("movieId")
+            DetailsScreen(navController = navController, movieId = movieId ?: 0)
         }
         composable("search") {
             SearchScreen(navController = navController)

@@ -31,15 +31,25 @@ fun HomeScreen(navController: NavController) {
     val onFavoriteClicked: (Int) -> Unit = { id ->
         viewModel.updateFavMovies(id)
     }
+    val onItemClicked: (Int) -> Unit = { id ->
+        navController.navigate("details/$id")
+    }
     val favoritesAdapter = remember { FavoriteMovieAdapter(emptyList()) }
-    val movieAdapter = remember { MovieAdapter(emptyList(), onFavoriteClicked, emptyList()) }
+    val movieAdapter =
+        remember {
+            MovieAdapter(
+                movies = emptyList(),
+                favoritesIDs = emptyList(),
+                onFavoriteClicked = onFavoriteClicked,
+                onItemClicked = onItemClicked
+            )
+        }
 
-    // Observe LiveData list and update adapter's data
     val movies by viewModel.staffPickData.observeAsState(emptyList())
     val favoriteIDs by viewModel.favoritesIdData.observeAsState(emptyList())
     val favorites by viewModel.favMovieData.observeAsState(emptyList())
 
-    movieAdapter.updateMovies(movies, favoriteIDs)
+    movieAdapter.updateMovies(newMovies = movies, newFavoritesIDs = favoriteIDs)
     favoritesAdapter.updateFavoriteMovies(favorites)
 
     Column() {
@@ -48,12 +58,15 @@ fun HomeScreen(navController: NavController) {
             factory = { context ->
                 val mainView =
                     LayoutInflater.from(context).inflate(R.layout.home_screen_layout, null)
+                
                 val username = mainView.findViewById<TextView>(R.id.username)
                 username.text = viewModel.getName()
+
                 val staffPicksRecyclerView =
                     mainView.findViewById<RecyclerView>(R.id.staffPicksList)
                 staffPicksRecyclerView.layoutManager = LinearLayoutManager(context)
                 staffPicksRecyclerView.adapter = movieAdapter
+
                 val favoritesRecyclerView =
                     mainView.findViewById<RecyclerView>(R.id.favoritesRecyclerView)
                 favoritesRecyclerView.layoutManager =
@@ -64,6 +77,7 @@ fun HomeScreen(navController: NavController) {
                 searchIcon.setOnClickListener {
                     navController.navigate("search")
                 }
+
                 mainView
             }, update = {}
         )

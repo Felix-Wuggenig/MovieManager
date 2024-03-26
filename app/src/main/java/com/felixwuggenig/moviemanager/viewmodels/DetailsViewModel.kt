@@ -7,27 +7,26 @@ import com.felixwuggenig.moviemanager.data.DataManager
 import com.felixwuggenig.moviemanager.data.SharedPreferences
 import com.felixwuggenig.moviemanager.models.Movie
 
-class HomeViewModel(
-    private val dataManager: DataManager,
-    private val sharedPreferences: SharedPreferences
+class DetailsViewModel(
+    val dataManager: DataManager,
+    val sharedPreferences: SharedPreferences
 ) : ViewModel() {
-    
-    private val mutableFavMovieData = MutableLiveData<List<Movie>>()
-    val favMovieData: LiveData<List<Movie>> = mutableFavMovieData
+    private val movieData = MutableLiveData<Movie>()
+    val mutableMovieData: LiveData<Movie> = movieData
 
-    private val mutableStaffPickData = MutableLiveData<List<Movie>>()
-    val staffPickData: LiveData<List<Movie>> = mutableStaffPickData
 
     private val mutableFavoritesIdData = MutableLiveData<List<Int>>()
     val favoritesIdData: LiveData<List<Int>> = mutableFavoritesIdData
 
-    private val name = sharedPreferences.getName()
-
-    fun getName() = name
-    fun loadFavMovieData() {
+    fun loadMovieData(id: Int) {
         val favIdList = sharedPreferences.getFavoriteIdList()
         mutableFavoritesIdData.value = favIdList
-        mutableFavMovieData.value = dataManager.getMovieList().filter { favIdList.contains(it.id) }
+        movieData.value = dataManager.getMovieList().first { it.id == id }
+    }
+
+    private fun updateFavoritesList() {
+        val favIdList = sharedPreferences.getFavoriteIdList()
+        mutableFavoritesIdData.value = favIdList
     }
 
     fun updateFavMovies(id: Int) {
@@ -36,11 +35,7 @@ class HomeViewModel(
         } else {
             sharedPreferences.addToFavList(id)
         }
-        loadFavMovieData()
-    }
-
-    fun loadStaffPickData() {
-        mutableStaffPickData.value = dataManager.getStaffPicks()
+        updateFavoritesList()
     }
 
 }

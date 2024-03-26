@@ -14,8 +14,8 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun DetailsScreen(navController: NavController) {
-    com.felixwuggenig.moviemanager.ui.screens.DetailsScreen(navController = navController)
+fun DetailsScreen(navController: NavController, movieId: Int) {
+    com.felixwuggenig.moviemanager.ui.screens.DetailsScreen(navController = navController,movieId=movieId)
 }
 
 @Composable

@@ -3,9 +3,11 @@ package com.felixwuggenig.moviemanager.di
 import com.felixwuggenig.moviemanager.data.DataManager
 import com.felixwuggenig.moviemanager.data.SharedPreferences
 import com.felixwuggenig.moviemanager.models.typeadapter.LocalDateTypeAdapter
+import com.felixwuggenig.moviemanager.viewmodels.DetailsViewModel
 import com.felixwuggenig.moviemanager.viewmodels.HomeViewModel
 import com.felixwuggenig.moviemanager.viewmodels.LoginViewModel
 import com.felixwuggenig.moviemanager.viewmodels.MainViewModel
+import com.felixwuggenig.moviemanager.viewmodels.SearchViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidContext
@@ -20,8 +22,11 @@ val appModule = module {
             .create()
     }
     single<DataManager> { DataManager(gson = get(), resources = androidContext().resources) }
+    single<SharedPreferences> { SharedPreferences(context = androidContext(), gson = get()) }
+
     viewModelOf(::MainViewModel)
     viewModelOf(::LoginViewModel)
+    viewModelOf(::SearchViewModel)
     viewModelOf(::HomeViewModel)
-    single<SharedPreferences> { SharedPreferences(context = androidContext(), gson = get()) }
+    viewModelOf(::DetailsViewModel)
 }

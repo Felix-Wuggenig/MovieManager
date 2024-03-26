@@ -14,8 +14,9 @@ import com.felixwuggenig.moviemanager.models.Movie
 
 class MovieAdapter(
     private var movies: List<Movie>,
+    private var favoritesIDs: List<Int>,
     private val onFavoriteClicked: (Int) -> Unit,
-    private var favoritesIDs: List<Int>
+    private val onItemClicked: (Int) -> Unit
 ) :
     RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
@@ -47,23 +48,26 @@ class MovieAdapter(
         private val buttonFavorite: Button = itemView.findViewById(R.id.buttonFavorite)
 
         fun bind(movie: Movie) {
-            // Bind data to views
-            // imageViewMovie.setImageResource(movie.imageResId)
             textViewYear.text = movie.releaseDate.year.toString()
             ratingBar.rating = movie.rating.toFloat()
             ratingBar.setIsIndicator(true)
             textViewName.text = movie.title
             Glide.with(imageViewMovie).load(movie.posterURL).into(imageViewMovie)
 
-            // Set onClickListener for the favorite button
             if (favoritesIDs.contains(movie.id)) {
                 buttonFavorite.text = "Unfavorite"
             } else {
                 buttonFavorite.text = "Favorite"
             }
+
             buttonFavorite.setOnClickListener {
                 onFavoriteClicked(movie.id)
             }
+
+            itemView.setOnClickListener {
+                onItemClicked(movie.id)
+            }
+
         }
     }
 }
