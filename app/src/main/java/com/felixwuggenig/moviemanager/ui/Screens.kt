@@ -10,15 +10,15 @@ fun SignUpScreen(navController: NavController) {
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    com.felixwuggenig.moviemanager.ui.screens.HomeScreen()
+    com.felixwuggenig.moviemanager.ui.screens.HomeScreen(navController = navController)
 }
 
 @Composable
 fun DetailsScreen(navController: NavController) {
-    com.felixwuggenig.moviemanager.ui.screens.DetailsScreen()
+    com.felixwuggenig.moviemanager.ui.screens.DetailsScreen(navController = navController)
 }
 
 @Composable
 fun SearchScreen(navController: NavController) {
-    com.felixwuggenig.moviemanager.ui.screens.SearchScreen()
+    com.felixwuggenig.moviemanager.ui.screens.SearchScreen(navController = navController)
 }

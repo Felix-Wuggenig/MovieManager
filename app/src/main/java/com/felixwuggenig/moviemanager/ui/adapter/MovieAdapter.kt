@@ -5,16 +5,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.felixwuggenig.moviemanager.R
 import com.felixwuggenig.moviemanager.models.Movie
 
-class MovieAdapter(private var movies: List<Movie>, private val onFavoriteClicked: (Int) -> Unit) :
+class MovieAdapter(
+    private var movies: List<Movie>,
+    private val onFavoriteClicked: (Int) -> Unit,
+    private var favoritesIDs: List<Int>
+) :
     RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
-    fun updateMovies(newMovies: List<Movie>) {
+    fun updateMovies(newMovies: List<Movie>, newFavoritesIDs: List<Int>) {
         movies = newMovies
+        favoritesIDs = newFavoritesIDs
         notifyDataSetChanged()
     }
 
@@ -35,7 +42,7 @@ class MovieAdapter(private var movies: List<Movie>, private val onFavoriteClicke
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageViewMovie: ImageView = itemView.findViewById(R.id.imageViewMovie)
         private val textViewYear: TextView = itemView.findViewById(R.id.textViewYear)
-        private val textViewRating: TextView = itemView.findViewById(R.id.textViewRating)
+        private val ratingBar: RatingBar = itemView.findViewById(R.id.ratingBarMovie)
         private val textViewName: TextView = itemView.findViewById(R.id.textViewName)
         private val buttonFavorite: Button = itemView.findViewById(R.id.buttonFavorite)
 
@@ -43,10 +50,17 @@ class MovieAdapter(private var movies: List<Movie>, private val onFavoriteClicke
             // Bind data to views
             // imageViewMovie.setImageResource(movie.imageResId)
             textViewYear.text = movie.releaseDate.year.toString()
-            textViewRating.text = movie.rating.toString()
+            ratingBar.rating = movie.rating.toFloat()
+            ratingBar.setIsIndicator(true)
             textViewName.text = movie.title
+            Glide.with(imageViewMovie).load(movie.posterURL).into(imageViewMovie)
 
             // Set onClickListener for the favorite button
+            if (favoritesIDs.contains(movie.id)) {
+                buttonFavorite.text = "Unfavorite"
+            } else {
+                buttonFavorite.text = "Favorite"
+            }
             buttonFavorite.setOnClickListener {
                 onFavoriteClicked(movie.id)
             }
