@@ -51,7 +51,11 @@ class MovieAdapter(
             ratingBar.rating = movie.rating.toFloat()
             ratingBar.setIsIndicator(true)
             textViewName.text = movie.title
-            Glide.with(imageViewMovie).load(movie.posterURL).into(imageViewMovie)
+            Glide.with(imageViewMovie)
+                .load(movie.posterURL)
+                .placeholder(R.drawable.glide_placeholder)
+                .error(R.drawable.glide_error)
+                .into(imageViewMovie)
 
             if (favoritesIDs.contains(movie.id)) {
                 imageViewFavorite.setImageDrawable(imageViewFavorite.context.getDrawable(R.drawable.favorite_on))

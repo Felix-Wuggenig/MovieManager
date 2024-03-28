@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.felixwuggenig.moviemanager.data.SharedPreferences
 
-class LoginViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
+class SignUpViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
 
     private val mutableNameData = MutableLiveData<String>()
     val nameData: LiveData<String> = mutableNameData

@@ -56,7 +56,7 @@ fun HomeScreen(navController: NavController) {
     val favorites by viewModel.favMovieData.observeAsState(emptyList())
 
     movieAdapter.updateMovies(newMovies = movies, newFavoritesIDs = favoriteIDs)
-    favoritesAdapter.updateFavoriteMovies(favorites)
+    favoritesAdapter.updateFavoriteMovies(newMovies = favorites)
 
     Column() {
         AndroidView(

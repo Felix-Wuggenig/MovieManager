@@ -42,7 +42,11 @@ class FavoriteMovieAdapter(
             itemView.setOnClickListener {
                 onMovieClicked(movie.id)
             }
-            Glide.with(imageViewFavorite).load(movie.posterURL).into(imageViewFavorite)
+            Glide.with(imageViewFavorite)
+                .load(movie.posterURL)
+                .placeholder(R.drawable.glide_placeholder)
+                .error(R.drawable.glide_error).centerCrop()
+                .into(imageViewFavorite)
         }
     }
 }

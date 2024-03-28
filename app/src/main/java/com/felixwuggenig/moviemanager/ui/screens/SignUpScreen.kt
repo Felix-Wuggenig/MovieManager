@@ -28,13 +28,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.felixwuggenig.moviemanager.R
 import com.felixwuggenig.moviemanager.ui.composables.CustomTextField
-import com.felixwuggenig.moviemanager.viewmodels.LoginViewModel
+import com.felixwuggenig.moviemanager.viewmodels.SignUpViewModel
 import org.koin.androidx.compose.getViewModel
 
 
 @Composable
 fun SignUpScreen(navController: NavController) {
-    val viewModel: LoginViewModel = getViewModel()
+    val viewModel: SignUpViewModel = getViewModel()
 
     val name = viewModel.nameData.observeAsState("")
     val email = viewModel.emailData.observeAsState("")
@@ -172,8 +172,7 @@ private fun SignUpViewPreview() {
         onUpdateName = {},
         onUpdateEmail = {},
         onUpdatePassword = {},
-        onUpdateConfirmPassword = {}
-    ) {
-
-    }
+        onUpdateConfirmPassword = {},
+        onSubmitClicked = {}
+    )
 }

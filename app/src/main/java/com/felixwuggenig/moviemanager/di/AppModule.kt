@@ -5,7 +5,7 @@ import com.felixwuggenig.moviemanager.data.SharedPreferences
 import com.felixwuggenig.moviemanager.models.typeadapter.LocalDateTypeAdapter
 import com.felixwuggenig.moviemanager.viewmodels.DetailsViewModel
 import com.felixwuggenig.moviemanager.viewmodels.HomeViewModel
-import com.felixwuggenig.moviemanager.viewmodels.LoginViewModel
+import com.felixwuggenig.moviemanager.viewmodels.SignUpViewModel
 import com.felixwuggenig.moviemanager.viewmodels.MainViewModel
 import com.felixwuggenig.moviemanager.viewmodels.SearchViewModel
 import com.google.gson.Gson
@@ -25,7 +25,7 @@ val appModule = module {
     single<SharedPreferences> { SharedPreferences(context = androidContext(), gson = get()) }
 
     viewModelOf(::MainViewModel)
-    viewModelOf(::LoginViewModel)
+    viewModelOf(::SignUpViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::DetailsViewModel)

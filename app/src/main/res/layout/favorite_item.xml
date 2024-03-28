@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/imageViewFavorite"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_corner_shape"
         android:clipToOutline="true" />
