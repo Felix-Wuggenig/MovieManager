@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.felixwuggenig.moviemanager.ui.theme.ErrorColor
@@ -35,8 +36,8 @@ fun CustomTextField(
     errorText: String,
     placeholder: String,
     onValueChange: (String) -> Unit,
-    isPassword: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPassword: Boolean = false
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
@@ -96,4 +97,16 @@ fun CustomTextField(
     }
 
 
+}
+
+@Preview
+@Composable
+fun CustomTextFieldPreview() {
+    CustomTextField(
+        text = "Text",
+        errorText = "",
+        placeholder = "Name",
+        onValueChange = {},
+        isPassword = false,
+    )
 }

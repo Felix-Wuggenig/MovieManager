@@ -1,7 +1,5 @@
 package com.felixwuggenig.moviemanager.data
 
-// Preferences.kt
-
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson

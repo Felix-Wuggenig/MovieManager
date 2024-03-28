@@ -22,17 +22,22 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.felixwuggenig.moviemanager.R
+import com.felixwuggenig.moviemanager.models.Director
 import com.felixwuggenig.moviemanager.models.Movie
 import com.felixwuggenig.moviemanager.ui.theme.DetailsScreenRoundTextBackground
 import com.felixwuggenig.moviemanager.ui.theme.DetailsScreenRoundTextColor
@@ -43,6 +48,7 @@ import com.gowtham.ratingbar.RatingBarConfig
 import org.koin.androidx.compose.get
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.time.LocalDate
 import java.util.Locale
 
 @Composable
@@ -98,13 +104,11 @@ fun DetailsView(
                     if (isFavorite) {
                         Image(
                             painter = painterResource(R.drawable.favorite_on),
-                            modifier = Modifier.scale(3f),
                             contentDescription = "Unfavorite"
                         )
                     } else {
                         Image(
                             painter = painterResource(R.drawable.favorite_off),
-                            modifier = Modifier.scale(3f),
                             contentDescription = "Favorite"
                         )
                     }
@@ -112,7 +116,6 @@ fun DetailsView(
                 IconButton(onClick = onCloseCLicked) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        modifier = Modifier.scale(1.5f),
                         contentDescription = "Close"
                     )
                 }
@@ -135,10 +138,13 @@ fun DetailsView(
                     )
                     RatingBar(
                         value = movie.rating.toFloat(),
-                        config = RatingBarConfig().activeColor(RatingStarColorActive).size(20.dp)
-                            .inactiveColor(DetailsScreenRoundTextBackground).isIndicator(true),
-                        onValueChange = {},
+                        config = RatingBarConfig()
+                            .activeColor(RatingStarColorActive)
+                            .size(20.dp)
+                            .inactiveColor(DetailsScreenRoundTextBackground)
+                            .isIndicator(true),
                         onRatingChanged = {},
+                        onValueChange = {},
                         modifier = Modifier.padding(top = 16.dp)
                     )
                     Text(
@@ -147,15 +153,25 @@ fun DetailsView(
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Row(
-                        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-                    ) {
-                        Text(
-                            text = movie.title,
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        modifier = Modifier.padding(
+                            top = 16.dp,
+                            bottom = 8.dp,
+                            start = 48.dp,
+                            end = 48.dp
                         )
+                    ) {
+                        val annotatedString = buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(movie.title)
+                            }
+                            withStyle(style = SpanStyle(color = Color.DarkGray)) {
+                                append(" (${movie.releaseDate.year})")
+                            }
+                        }
                         Text(
-                            text = " (${movie.releaseDate.year})",
-                            style = MaterialTheme.typography.titleLarge.copy(color = Color.DarkGray)
+                            text = annotatedString,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge
                         )
 
                     }
@@ -300,4 +316,30 @@ fun Fact(title: String, info: String) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun DetailsViewPreview() {
+    DetailsView(
+        movie = Movie(
+            3.toDouble(),
+            1,
+            1000L,
+            LocalDate.now(),
+            Director("Dir ector", ""),
+            "",
+            listOf(),
+            120L,
+            "Movie title",
+            "overview text",
+            4L,
+            100L,
+            "en",
+            emptyList()
+        ),
+        isFavorite = true,
+        onFavoriteClicked = {},
+        onCloseCLicked = {}
+    )
 }

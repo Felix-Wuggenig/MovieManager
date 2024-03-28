@@ -67,9 +67,7 @@ fun SearchScreen(navController: NavController) {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    // This method is called after the text has been changed
                     val searchQuery = s.toString()
-                    // Call your function here with the updated text
                     viewModel.updateSearchString(searchQuery)
                 }
             })

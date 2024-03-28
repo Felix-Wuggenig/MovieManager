@@ -8,15 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.felixwuggenig.moviemanager.ui.DetailsScreen
-import com.felixwuggenig.moviemanager.ui.HomeScreen
-import com.felixwuggenig.moviemanager.ui.SearchScreen
-import com.felixwuggenig.moviemanager.ui.SignUpScreen
+import com.felixwuggenig.moviemanager.ui.nav.MyNavHost
 import com.felixwuggenig.moviemanager.ui.theme.MovieManagerTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +17,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MovieManagerTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -40,23 +32,5 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView() {
     val navController = rememberNavController()
-
-    NavHost(navController, startDestination = "signUp") {
-        composable("signUp") {
-            SignUpScreen(navController = navController)
-        }
-        composable("home") {
-            HomeScreen(navController = navController)
-        }
-        composable(
-            "details/{movieId}",
-            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
-        ) { navBackStackEntry ->
-            val movieId = navBackStackEntry.arguments?.getInt("movieId")
-            DetailsScreen(navController = navController, movieId = movieId ?: 0)
-        }
-        composable("search") {
-            SearchScreen(navController = navController)
-        }
-    }
+    MyNavHost(navController = navController)
 }

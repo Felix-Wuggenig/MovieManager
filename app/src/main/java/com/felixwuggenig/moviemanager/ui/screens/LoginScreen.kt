@@ -7,27 +7,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,19 +32,10 @@ import com.felixwuggenig.moviemanager.viewmodels.LoginViewModel
 import org.koin.androidx.compose.getViewModel
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(navController: NavController) {
     val viewModel: LoginViewModel = getViewModel()
 
-    val onSubmitClicked = {
-        if (viewModel.checkData()) {
-            navController.popBackStack()
-            navController.navigate("home")
-        }
-        navController.navigate("home")
-
-    }
     val name = viewModel.nameData.observeAsState("")
     val email = viewModel.emailData.observeAsState("")
     val password = viewModel.passwordData.observeAsState("")
@@ -59,12 +45,48 @@ fun SignUpScreen(navController: NavController) {
     val passwordError = viewModel.passwordError.observeAsState("")
     val confirmPasswordError = viewModel.confirmPasswordError.observeAsState("")
 
-    var passwordVisibility by remember { mutableStateOf(false) }
-    var passwordConfirmVisibility by remember { mutableStateOf(false) }
+    SignUpView(
+        name = name.value,
+        email = email.value,
+        password = password.value,
+        confirmPassword = confirmPassword.value,
+        emailError = emailError.value,
+        passwordError = passwordError.value,
+        confirmPasswordError = confirmPasswordError.value,
+        onUpdateName = { newName -> viewModel.setNameData(newName = newName) },
+        onUpdateEmail = { newEmail -> viewModel.setEmailData(newEmail = newEmail) },
+        onUpdatePassword = { newPassword -> viewModel.setPasswordData(newPassword = newPassword) },
+        onUpdateConfirmPassword = { newConfirmPassword ->
+            viewModel.setConfirmPasswordData(
+                newConfirmPassword = newConfirmPassword
+            )
+        },
+        onSubmitClicked = {
+            if (viewModel.checkData()) {
+                navController.popBackStack()
+                navController.navigate("home")
+            }
+            navController.navigate("home")
+        }
+    )
 
+}
 
-    val context = LocalContext.current
-
+@Composable
+fun SignUpView(
+    name: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    emailError: String,
+    passwordError: String,
+    confirmPasswordError: String,
+    onUpdateName: (String) -> Unit,
+    onUpdateEmail: (String) -> Unit,
+    onUpdatePassword: (String) -> Unit,
+    onUpdateConfirmPassword: (String) -> Unit,
+    onSubmitClicked: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -78,14 +100,14 @@ fun SignUpScreen(navController: NavController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.login_header),
-                contentDescription = null, // Provide appropriate content description
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize(),
-                contentScale = ContentScale.FillWidth // Or another scaling option you prefer
+                contentScale = ContentScale.FillWidth
             )
             Image(
                 painter = painterResource(id = R.drawable.login_profile_picture),
-                contentDescription = null, // Provide appropriate content description
+                contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .scale(3f),
@@ -94,31 +116,31 @@ fun SignUpScreen(navController: NavController) {
         }
         Column(modifier = Modifier.padding(48.dp)) {
             CustomTextField(
-                text = name.value,
+                text = name,
                 errorText = "",
                 placeholder = "Name",
-                onValueChange = { newName -> viewModel.setNameData(newName = newName) })
+                onValueChange = { newName -> onUpdateName(newName) })
 
             CustomTextField(
-                text = email.value,
-                errorText = emailError.value,
+                text = email,
+                errorText = emailError,
                 placeholder = "E-Mail-Address*",
-                onValueChange = { newEmail -> viewModel.setEmailData(newEmail = newEmail) })
+                onValueChange = { newEmail -> onUpdateEmail(newEmail) })
 
             CustomTextField(
-                text = password.value,
-                errorText = passwordError.value,
+                text = password,
+                errorText = passwordError,
                 placeholder = "Password*",
                 isPassword = true,
-                onValueChange = { newPassword -> viewModel.setPasswordData(newPassword = newPassword) }
+                onValueChange = { newPassword -> onUpdatePassword(newPassword) }
             )
 
             CustomTextField(
-                text = confirmPassword.value,
-                errorText = confirmPasswordError.value,
+                text = confirmPassword,
+                errorText = confirmPasswordError,
                 placeholder = "Confirm Password*",
                 isPassword = true,
-                onValueChange = { newPassword -> viewModel.setConfirmPasswordData(newConfirmPassword = newPassword) }
+                onValueChange = { newPassword -> onUpdateConfirmPassword(newPassword) }
             )
 
             Button(
@@ -128,10 +150,30 @@ fun SignUpScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
-                    .height(50.dp)
+                    .requiredHeight(50.dp)
             ) {
                 Text(text = "Sign Up", fontWeight = FontWeight.Bold, fontSize = 18.sp)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SignUpViewPreview() {
+    SignUpView(
+        name = "Testname",
+        email = "Email",
+        password = "",
+        confirmPassword = "",
+        emailError = "",
+        passwordError = "Password cant be empty",
+        confirmPasswordError = "",
+        onUpdateName = {},
+        onUpdateEmail = {},
+        onUpdatePassword = {},
+        onUpdateConfirmPassword = {}
+    ) {
+
     }
 }
