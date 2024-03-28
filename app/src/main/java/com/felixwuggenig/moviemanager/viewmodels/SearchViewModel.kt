@@ -19,15 +19,16 @@ class SearchViewModel(
 
     private var searchString: String = ""
 
-    fun updateSearchString(newString:String){
-        searchString=newString
+    fun updateSearchString(newString: String) {
+        searchString = newString
         loadMovieData()
     }
 
     fun loadMovieData() {
         val favIdList = sharedPreferences.getFavoriteIdList()
         mutableFavoritesIdData.value = favIdList
-        mutableMovieData.value = dataManager.getMovieList().filter { it.title.contains(searchString) }
+        mutableMovieData.value = dataManager.getMovieList()
+            .filter { it.title.lowercase().contains(searchString.lowercase()) }
     }
 
     fun updateFavMovies(id: Int) {

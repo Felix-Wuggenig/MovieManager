@@ -11,3 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val ErrorColor = Color(0xFFFF5555)
+val TextColor = Color(0xFF999999)
+val DetailsScreenRoundTextBackground = Color(0x0D141C25)
+val DetailsScreenRoundTextColor = Color(0xB3141C25)
+val RatingStarColorActive = Color(0xFFFF9800)

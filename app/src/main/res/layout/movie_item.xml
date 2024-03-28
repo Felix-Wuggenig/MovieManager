@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?><!-- movie_item.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:paddingVertical="16dp">
 
     <ImageView
         android:id="@+id/imageViewMovie"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop" />
+        android:layout_width="67dp"
+        android:layout_height="100dp"
+        android:background="@drawable/rounded_corner_shape"
+        android:clipToOutline="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewFavorite"
+        app:layout_constraintStart_toEndOf="@id/imageViewMovie"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textViewYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Year"
-            android:textSize="16sp"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textColor="@color/black"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <RatingBar
@@ -36,20 +51,18 @@
             android:progressBackgroundTint="#FF9800"
             android:progressTint="#FF9800" />
 
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorite" />
+    <ImageView
+        android:id="@+id/imageViewFavorite"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="24dp"
+        android:layout_weight="0.1"
+        android:src="@drawable/favorite_off"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

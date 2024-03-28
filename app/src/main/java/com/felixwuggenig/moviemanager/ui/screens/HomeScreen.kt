@@ -1,5 +1,9 @@
 package com.felixwuggenig.moviemanager.ui.screens
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import android.widget.TextView
@@ -24,7 +28,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(navController: NavController) {
     val viewModel: HomeViewModel = getViewModel()
-    
+
     LaunchedEffect(Unit) {
         viewModel.loadFavMovieData()
         viewModel.loadStaffPickData()
@@ -74,6 +78,31 @@ fun HomeScreen(navController: NavController) {
                 favoritesRecyclerView.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 favoritesRecyclerView.adapter = favoritesAdapter
+
+                val textViewFavorites = mainView.findViewById<TextView>(R.id.textViewFavoritesTitle)
+                val spannableString1 = SpannableString("YOUR FAVORITES")
+
+                spannableString1.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    5,
+                    spannableString1.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                textViewFavorites.text = spannableString1
+
+                val textViewStaffPicks =
+                    mainView.findViewById<TextView>(R.id.textViewStaffPicksTitle)
+                val spannableString2 = SpannableString("OUR STAFFPICKS")
+
+                spannableString2.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    4,
+                    spannableString2.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                textViewStaffPicks.text = spannableString2
 
                 val searchIcon = mainView.findViewById<ImageButton>(R.id.searchIcon)
                 searchIcon.setOnClickListener {

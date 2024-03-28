@@ -3,7 +3,6 @@ package com.felixwuggenig.moviemanager.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -45,7 +44,7 @@ class MovieAdapter(
         private val textViewYear: TextView = itemView.findViewById(R.id.textViewYear)
         private val ratingBar: RatingBar = itemView.findViewById(R.id.ratingBarMovie)
         private val textViewName: TextView = itemView.findViewById(R.id.textViewName)
-        private val buttonFavorite: Button = itemView.findViewById(R.id.buttonFavorite)
+        private val imageViewFavorite: ImageView = itemView.findViewById(R.id.imageViewFavorite)
 
         fun bind(movie: Movie) {
             textViewYear.text = movie.releaseDate.year.toString()
@@ -55,19 +54,18 @@ class MovieAdapter(
             Glide.with(imageViewMovie).load(movie.posterURL).into(imageViewMovie)
 
             if (favoritesIDs.contains(movie.id)) {
-                buttonFavorite.text = "Unfavorite"
+                imageViewFavorite.setImageDrawable(imageViewFavorite.context.getDrawable(R.drawable.favorite_on))
             } else {
-                buttonFavorite.text = "Favorite"
+                imageViewFavorite.setImageDrawable(imageViewFavorite.context.getDrawable(R.drawable.favorite_off))
             }
 
-            buttonFavorite.setOnClickListener {
+            imageViewFavorite.setOnClickListener {
                 onFavoriteClicked(movie.id)
             }
 
-            itemView.setOnClickListener {
+            imageViewMovie.setOnClickListener {
                 onItemClicked(movie.id)
             }
-
         }
     }
 }

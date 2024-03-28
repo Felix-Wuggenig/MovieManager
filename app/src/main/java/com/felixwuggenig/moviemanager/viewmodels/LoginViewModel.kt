@@ -19,17 +19,14 @@ class LoginViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
     private val mutablePasswordConfirmData = MutableLiveData<String>()
     val passwordConfirmData: LiveData<String> = mutablePasswordConfirmData
 
-    private val mutableNameError = MutableLiveData<String>()
-    val nameError: LiveData<String> = mutableNameError
-
     private val mutableEmailError = MutableLiveData<String>()
     val emailError: LiveData<String> = mutableEmailError
 
     private val mutablePasswordError = MutableLiveData<String>()
     val passwordError: LiveData<String> = mutablePasswordError
 
-    private val mutablePasswordConfirmError = MutableLiveData<String>()
-    val passwordConfirmError: LiveData<String> = mutablePasswordConfirmError
+    private val mutableConfirmPasswordError = MutableLiveData<String>()
+    val confirmPasswordError: LiveData<String> = mutableConfirmPasswordError
 
 
     fun setNameData(newName: String) {
@@ -44,18 +41,12 @@ class LoginViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
         mutablePasswordData.value = newPassword
     }
 
-    fun setPasswordConfirmData(newPasswordConfirm: String) {
-        mutablePasswordConfirmData.value = newPasswordConfirm
+    fun setConfirmPasswordData(newConfirmPassword: String) {
+        mutablePasswordConfirmData.value = newConfirmPassword
     }
 
     fun checkData(): Boolean {
         var isValid = true
-        if (nameData.value.isNullOrEmpty()) {
-            mutableNameError.value = "Name cannot be empty"
-            isValid = false
-        } else {
-            mutableNameError.value = ""
-        }
 
         if (emailData.value.isNullOrEmpty()) {
             mutableEmailError.value = "Email cannot be empty"
@@ -78,10 +69,10 @@ class LoginViewModel(val sharedPreferences: SharedPreferences) : ViewModel() {
         }
 
         if (passwordConfirmData.value != passwordData.value) {
-            mutablePasswordConfirmError.value = "Passwords do not match!"
+            mutableConfirmPasswordError.value = "Passwords do not match!"
             isValid = false
         } else {
-            mutablePasswordConfirmError.value = ""
+            mutableConfirmPasswordError.value = ""
         }
         if (isValid) {
             sharedPreferences.saveName(mutableNameData.value.orEmpty())
