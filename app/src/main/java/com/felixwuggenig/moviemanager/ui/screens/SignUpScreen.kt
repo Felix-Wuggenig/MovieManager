@@ -66,7 +66,6 @@ fun SignUpScreen(navController: NavController) {
                 navController.popBackStack()
                 navController.navigate("home")
             }
-            navController.navigate("home")
         }
     )
 

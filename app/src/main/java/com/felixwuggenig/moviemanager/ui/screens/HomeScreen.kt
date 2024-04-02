@@ -66,7 +66,7 @@ fun HomeScreen(navController: NavController) {
                     LayoutInflater.from(context).inflate(R.layout.home_screen_layout, null)
 
                 val username = mainView.findViewById<TextView>(R.id.username)
-                username.text = viewModel.getName()
+                username.text = viewModel.getName().ifEmpty { "User" }
 
                 val staffPicksRecyclerView =
                     mainView.findViewById<RecyclerView>(R.id.staffPicksList)
